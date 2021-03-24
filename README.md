@@ -122,7 +122,11 @@ If all goes well you should have the following messages:
 - *INFO - Bought ____*
 - *INFO - Ready to start trading*
 
-## Step 7 - Errors & Debugging
+## Step 7 - Notifications
+
+Apprise allows the bot to send notifications to all of the most popular notification services available such as: Telegram, Discord, Slack, Amazon SNS, Gotify, etc... [Read more](https://github.com/edeng23/binance-trade-bot#notifications-with-apprise).
+
+## Step 8 - Errors & Debugging
 
 If your bot is throwing errors or otherwise not working properly, please reference the original repository [here](https://github.com/edeng23/binance-trade-bot). They have a Discord server with lots of helpful hints about how to fix common issues.
 
