@@ -1,10 +1,139 @@
-# binance-trade-bot
+# binance-trade-bot-install-guide
 
-![github](https://img.shields.io/github/workflow/status/edeng23/binance-trade-bot/binance-trade-bot)
-![docker](https://img.shields.io/docker/pulls/edeng23/binance-trade-bot)
+> Installation and set-up guide for [edeng23/binance-trade-bot](https://github.com/edeng23/binance-trade-bot)'s automated cryptocurrency trading bot. There are lots of resources for debugging on the original repository. If you're having issues getting your bot running, click the link above or see the original README.md inserted at the bottom of this file.
 
-> Automated cryptocurrency trading bot
+## Step 1 - Create a Binance Account
 
+- Go to [binance.us](https://www.binance.us) (USA users only) and create an account
+- Enable Two-Factor Authentication
+- Buy some of your preferred **_bridge coin_**
+  - The bot will use the bridge coin to begin buying coins when we start. If you are unsure about what a bridge coin is, or which one to use, refer to the **HOW?** section in the original README.md [here](https://github.com/edeng23/binance-trade-bot), or at the bottom of this file. We'll use USDT in this example.
+
+## Step 2 - Install Raspberry Pi OS
+
+- Raspberry Pi Imager - [Download Here](https://www.raspberrypi.org/software/)
+
+I recommend the Lite version as it only has the bare minimum amount of software pre-installed and keeps plenty of space on the microSD card.
+
+## Step 3 - Set-up Raspberry Pi OS
+
+1. Connect the Pi to the internet
+2. Change the default login password
+3. Run the following commands to ensure your OS is up to date:
+
+```shell
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+## Step 4 - Install necessary software
+
+### Install Git and clone the repository
+
+```shell
+sudo apt install git
+git clone https://github.com/edeng23/binance-trade-bot.git
+```
+
+### Install Python 3.8
+
+- [How to install Python 3.8 on Raspberry Pi (Raspbian)](https://installvirtual.com/how-to-install-python-3-8-on-raspberry-pi-raspbian/) _[This might take a while]_
+
+Enter `cd` after finishing the tutorial to return to the home directory
+
+### Install pip for Python3
+
+`sudo apt install python3-pip`
+
+### Install Python dependencies
+
+```shell
+cd binance-trade-bot
+pip3 install -r requirements.txt
+```
+
+## Step 5 - Configure the bot
+
+### Create and edit user.cfg file
+
+```shell
+touch user.cfg
+sudo nano user.cfg
+```
+
+Copy and paste the following block into the file we just created. Be sure to check **User.cfg Guidelines** below to make sure all the fields match your needs.
+
+```shell
+[binance_user_config]
+api_key=
+api_secret_key=
+current_coin=
+bridge=USDT
+tld=us
+hourToKeepScoutHistory=1
+scout_multiplier=5
+scout_sleep_time=5
+strategy=default
+```
+
+#### User.cfg Guidelines:
+
+-   **api_key** - Binance API key generated in the Binance account setup stage.
+-   **api_secret_key** - Binance secret key generated in the Binance account setup stage.
+-   **current_coin** - This is your starting coin of choice. This should be one of the coins from your supported coin list. If you want to start from your bridge currency, leave this field empty - the bot will select a random coin from your supported coin list and buy it.
+-   **bridge** - Your bridge currency of choice. Notice that different bridges will allow different sets of supported coins. For example, there may be a Binance particular-coin/USDT pair but no particular-coin/BUSD pair.
+-   **tld** - 'com' or 'us', depending on your region. Default is 'com'.
+-   **hourToKeepScoutHistory** - Controls how many hours of scouting values are kept in the database. After the amount of time specified has passed, the information will be deleted.
+-   **scout_multiplier** - Controls the value by which the difference between the current state of coin ratios and previous state of ratios is multiplied. For bigger values, the bot will wait for bigger margins to arrive before making a trade.
+-   **strategy** - The trading strategy to use. See [`binance_trade_bot/strategies`](binance_trade_bot/strategies/README.md) for more information
+
+### Create Binance API Key
+
+Go to Binance and create a new API key under [API Management](https://www.binance.us/en/usercenter/settings/api-management). Insert the API key and secret key into the user.cfg file we just created.
+
+Then enter CONTROL+X, then hit Y, and then ENTER to save and exit the user.cfg file
+
+### Modify supported_coin_list
+
+`sudo nano supported_coin_list`
+
+Make sure the coins on this list are compatable with your chosen bridge coin. You can check [here](https://www.binance.us/en/markets). Since we're using USDT as the bridge coin, we're looking for coins that end with **/USDT**. For example **ADA/USDT** would work, but **ALGO/BUSD** would not work unless we change the bridge coin to BUSD.
+
+Save changes and exit the file using CONTROL+X, then Y, then ENTER.
+
+## Step 6 - Start the bot
+
+We're now ready to start the bot for the first time. Make sure you're in the binance-trade-bot directory using:
+
+```shell
+cd
+cd binance-trade-bot
+```
+
+To start the bot enter `python3 -m binance_trade_bot`
+
+If all goes well you should have the following messages:
+
+- *INFO - Starting*
+- *INFO - Creating database schema if it doesn't already exist*
+- *INFO - Setting initial coin to ____*
+- *INFO - Purchasing <____> to begin trading*
+- *INFO - BUY QTY ####*
+- *INFO - Bought ____*
+- *INFO - Ready to start trading*
+
+## Step 7 - Errors & Debugging
+
+If your bot is throwing errors or otherwise not working properly, please reference the original repository [here](https://github.com/edeng23/binance-trade-bot). They have a Discord server with lots of helpful hints about how to fix common issues.
+
+## Disclaimer
+
+This project is a remix/installation guide for the original repository [edeng23/binance-trade-bot](https://github.com/edeng23/binance-trade-bot). The purpose of this project is to create an easier step-by-step guide to installing and configuring this software. I am not, under any circumstances, responsible for any of the actions you take whilst using this software or installation guide.
+
+> -End of installation guide-
+
+# Original README.md
+From [edeng23/binance-trade-bot](https://github.com/edeng23/binance-trade-bot)
 ## Why?
 
 This project was inspired by the observation that all cryptocurrencies pretty much behave in the same way. When one spikes, they all spike, and when one takes a dive, they all do. _Pretty much_. Moreover, all coins follow Bitcoin's lead; the difference is their phase offset.
@@ -152,3 +281,4 @@ If you plan to use real money, USE AT YOUR OWN RISK.
 Under no circumstances will I be held responsible or liable in any way for any
 claims, damages, losses, expenses, costs, or liabilities whatsoever, including,
 without limitation, any direct or indirect damages for loss of profits.
+# End of Original README.md
