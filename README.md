@@ -89,7 +89,7 @@ strategy=default
 
 ### Create Binance API Key
 
-Go to Binance and create a new API key under [API Management](https://www.binance.us/en/usercenter/settings/api-management). Insert the API key and secret key into the user.cfg file we just created.
+Go to Binance and create a new API key under [API Management](https://www.binance.us/en/usercenter/settings/api-management). Insert the API key and secret key into the user.cfg file we just created. Leave the current_coin field blank (bot automatically assigns a coin).
 
 Then enter CONTROL+X, then hit Y, and then ENTER to save and exit the user.cfg file
 
